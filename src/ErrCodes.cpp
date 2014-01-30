@@ -57,7 +57,7 @@ void FlushCipBuffer(int level,void *buffer,int size)
 	}
 }
 
-void LogCip(int level,char *format,...)
+void LogCip(int level,const char *format,...)
 {
 	va_list list;
 	va_start(list,format);

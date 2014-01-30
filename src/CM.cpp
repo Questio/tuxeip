@@ -146,7 +146,7 @@ int _ExForward_Close(Eip_Session *session,CIP_USINT Priority,
 	reply=_SendMRRequest(session,FORWARD_CLOSE,CM_PATH,sizeof(CM_PATH),request,requestsize,&replysize);
 	free(request);
 	if (reply!=NULL) {
-		LogCip(LogDebug,(const char *)"_ExForward_Close : reply=%p (%d)\n",reply,replysize);
+		LogCip(LogDebug,"_ExForward_Close : reply=%p (%d)\n",reply,replysize);
 		CIPERROR(MR_Error,reply->General_Status,_GetMRExtendedStatus(reply));
 		status=reply->General_Status;
 		free(reply);
