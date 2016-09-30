@@ -1,6 +1,6 @@
 PROJECT(tuxeip)
 
-ADD_LIBRARY(tuxeip STATIC src/AB.cpp
+ADD_LIBRARY(tuxeip SHARED src/AB.cpp
 			  src/CIP_IOI.cpp
 			  src/CM.cpp
 			  src/ErrCodes.cpp
