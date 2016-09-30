@@ -1,6 +1,7 @@
-PROJECT(tuxeip)
+cmake_minimum_required(VERSION 2.6)
+project(tuxeip)
 
-ADD_LIBRARY(tuxeip SHARED src/AB.cpp
+add_library(tuxeip SHARED src/AB.cpp
 			  src/CIP_IOI.cpp
 			  src/CM.cpp
 			  src/ErrCodes.cpp
@@ -10,3 +11,4 @@ ADD_LIBRARY(tuxeip SHARED src/AB.cpp
 			  src/PLC.cpp
 			  src/SendData.cpp)
 
+install(TARGETS tuxeip DESTINATION lib)
