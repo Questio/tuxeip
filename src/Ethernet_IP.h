@@ -45,13 +45,13 @@ typedef struct _Eip_Item {
 
 typedef struct _Eip_Common_Packet {
 	CIP_UINT Count;                             /* number of item to follow */
-	Eip_Item Adress;                            /* adressing information */
+	Eip_Item Adress;                            /* addressing information */
 	Eip_Item Data;                              /* encapsulated data packet */
 } PACKED Eip_Common_Packet;
 
 typedef struct _Eip_CPF {
 	CIP_UINT Count;                             /* number of item to follow */
-	Eip_Item Item;                              /* adressing information */
+	Eip_Item Item;                              /* addressing information */
 } PACKED Eip_CPF;
 
 typedef struct _Interface_Information {
@@ -74,7 +74,7 @@ typedef struct _Identity_Information {
 	/* Socket Adress */
 	CIP_INT Sin_family;                         /* shall be AF_INET=2 (big endian order) */
 	CIP_UINT Sin_port;                          /* shall be set to the port number (big endian order) */
-	CIP_UDINT Sin_adr;                          /* IP adress (big endian order) */
+	CIP_UDINT Sin_adr;                          /* IP address (big endian order) */
 	CIP_USINT Sin_Zero[8];                      /* shall be 0 */
 	CIP_UINT Vendor_ID;                         /* device manufacturers Vendor ID */
 	CIP_UINT Device_Type;                       /* Device type of product */
@@ -130,14 +130,14 @@ typedef SendRRData_Reply SendUnitData_Reply;
 /* --------------- Address items ------------------------- */
 
 typedef struct _Eip_NAI {
-	/* Null adress item */
+	/* Null address item */
 	CIP_UINT Type_Id;
 	CIP_UINT Length;
 } PACKED Eip_NAI;
 typedef Eip_NAI *PEip_NAI;
 
 typedef struct _Eip_CAI {
-	/* Connected adress item */
+	/* Connected address item */
 	CIP_UINT Type_Id;
 	CIP_UINT Length;
 	CIP_UDINT CID;
@@ -145,7 +145,7 @@ typedef struct _Eip_CAI {
 typedef Eip_CAI *PEip_CAI;
 
 typedef struct _Eip_SAI {
-	/* Sequenced adress item  -> Used for CIP transport class 0 & 1 */
+	/* Sequenced address item  -> Used for CIP transport class 0 & 1 */
 	CIP_UINT Type_Id;
 	CIP_UINT Length;
 	CIP_UDINT CID;
@@ -214,12 +214,12 @@ typedef struct _Eip_Connection{
 
 int IsEIP(void *Data);
 
-Eip_Session *_OpenSession(char *serveur,int port,int timeout);
-#define OpenSession(serveur) _OpenSession(serveur,EIP_PORT,CIP_DEFAULT_TIMEOUT);
+Eip_Session *_OpenSession(const char *server,int port,int timeout);
+#define OpenSession(server) _OpenSession(server,EIP_PORT,CIP_DEFAULT_TIMEOUT);
 
 void CloseSession(Eip_Session *session);
 
-#define CipOpenSock(serveur) _CipOpenSock(serveur,EIP_PORT)
+#define CipOpenSock(server) _CipOpenSock(server,EIP_PORT)
 
 int _RegisterSession(Eip_Session *session);
 #define RegisterSession _RegisterSession
@@ -239,30 +239,30 @@ ListInterface_Reply *_ListInterfaces(Eip_Session *session);
 int _GetItemSize(Eip_Item *item);
 
 Encap_Header *_BuildRequest(Eip_Session *session,
-	Eip_Item *adressitem,
-	void *adress,
+	Eip_Item *addressitem,
+	void *address,
 	Eip_Item *dataitem,
 	void *data,
 	int timeout);
 
 int _SendData(Eip_Session *session,CIP_UINT command,
-	Eip_Item *adressitem,void *adress,
+	Eip_Item *addressitem,void *address,
 	Eip_Item *dataitem,void *data);
 
 Encap_Header *_SendData_WaitReply(Eip_Session *session,
 	CIP_UINT command,
-	Eip_Item *adressitem,void *adress,
+	Eip_Item *addressitem,void *address,
 	Eip_Item *dataitem,void *data);
 
 Encap_Header *_SendRRData(Eip_Session *session,
-	Eip_Item *adressitem,void *adress,
+	Eip_Item *addressitem,void *address,
 	Eip_Item *dataitem,void *data);
-#define SendRRData(session,adressitem,dataitem) _SendRRData(session,adressitem,NULL,dataitem,NULL)
+#define SendRRData(session,addressitem,dataitem) _SendRRData(session,addressitem,NULL,dataitem,NULL)
 
 Encap_Header *_SendUnitData(Eip_Session *session,
-	Eip_Item *adressitem,void *adress,
+	Eip_Item *addressitem,void *address,
 	Eip_Item *dataitem,void *data);
-#define SendUnitData(session,adressitem,dataitem) _SendRRData(session,adressitem,NULL,dataitem,NULL)
+#define SendUnitData(session,addressitem,dataitem) _SendRRData(session,addressitem,NULL,dataitem,NULL)
 
 Eip_CDI *_ConnectedSend( Eip_Session *session,
 	Eip_Connection *connection,

@@ -30,7 +30,7 @@
 #include "CIP_Const.h"
 
 void _AddRR(Encap_Header *request,CIP_UDINT interface_handle,CIP_UINT timeout);
-void _AddCPF(Encap_Header *request,Eip_Item *adressitem,void *adress,Eip_Item *dataitem,void *data);
+void _AddCPF(Encap_Header *request,Eip_Item *addressitem,void *address,Eip_Item *dataitem,void *data);
 int _AddItem(Encap_Header *request,Eip_Item *item,void *data);
 
 int IsEIP(void *Data)
@@ -99,10 +99,10 @@ Eip_Item *_GetAdressItem(Encap_Header *header)
 
 Eip_Item *_GetDataItem(Encap_Header *header)
 {
-	Eip_Item *adressitem=_GetAdressItem(header);
-	if (adressitem==NULL)
+	Eip_Item *addressitem=_GetAdressItem(header);
+	if (addressitem==NULL)
 		return(NULL);
-	return((Eip_Item*)((char *)adressitem+sizeof(Eip_Item)+adressitem->Length));
+	return((Eip_Item*)((char *)addressitem+sizeof(Eip_Item)+addressitem->Length));
 }
 
 ListInterface_Reply *_GetInterfaces(Encap_Header *header)
@@ -126,7 +126,7 @@ ListIdentity_Reply *_GetIdentity(Encap_Header *header)
 	else return((ListIdentity_Reply*)(header));
 }
 
-Eip_Session *_OpenSession(char *serveur,int port,int timeout)
+Eip_Session *_OpenSession(const char *server,int port,int timeout)
 {
 	Eip_Session *session=NULL;
 	CIPERROR(0,0,0);
@@ -136,7 +136,7 @@ Eip_Session *_OpenSession(char *serveur,int port,int timeout)
 		return(NULL);
 	}
 	memset(session,0,sizeof(Eip_Session));
-	session->sock=_CipOpenSock(serveur,port);
+	session->sock=_CipOpenSock(server,port);
 	session->timeout=timeout;
 	if (session->sock<0) {
 		CIPERROR(Internal_Error,E_ConnectionFailed,0);
@@ -336,15 +336,15 @@ int _AddItem(Encap_Header *request,Eip_Item *item,void *data)
 	return(item->Length);
 }
 
-void _AddCPF(Encap_Header *request,Eip_Item *adressitem,void *adress,
+void _AddCPF(Encap_Header *request,Eip_Item *addressitem,void *address,
 	Eip_Item *dataitem,void *data)
 {
 	_AddINT2Header(request,2);
-	_AddItem(request,adressitem,adress);
+	_AddItem(request,addressitem,address);
 	_AddItem(request,dataitem,data);
 }
 
-Encap_Header *_BuildRequest(Eip_Session *session,Eip_Item *adressitem,void *adress,
+Encap_Header *_BuildRequest(Eip_Session *session,Eip_Item *addressitem,void *address,
 	Eip_Item *dataitem,void *data,int timeout)
 {
 	int requestsize=0;
@@ -352,7 +352,7 @@ Encap_Header *_BuildRequest(Eip_Session *session,Eip_Item *adressitem,void *adre
 	CIPERROR(0,0,0);
 	LogCip(LogTrace,"->Entering BuildRequest \n");
 	requestsize=sizeof(SendData_Request)+sizeof(CIP_UINT)+
-		_GetItemSize(adressitem)+adressitem->Length+_GetItemSize(dataitem)+dataitem->Length;
+		_GetItemSize(addressitem)+addressitem->Length+_GetItemSize(dataitem)+dataitem->Length;
 	request= (Encap_Header *)malloc(requestsize);
 	if (request==NULL) {
 		CIPERROR(Sys_Error,errno,0);
@@ -366,21 +366,21 @@ Encap_Header *_BuildRequest(Eip_Session *session,Eip_Item *adressitem,void *adre
 	request->Sender_ContextL=session->Sender_ContextL;
 	request->Sender_ContextH=session->Sender_ContextH;
 	((SendData_Request*)request)->Timeout=timeout/1000;
-	_AddCPF(request,adressitem,adress,dataitem,data);
+	_AddCPF(request,addressitem,address,dataitem,data);
 	FlushCipBuffer(LogDebug,request,requestsize);
 	LogCip(LogTrace,"<-Exiting BuildRequest : size=%d (%p)\n",requestsize,request);
 	return(request);
 }
 
 int _SendData(Eip_Session *session,CIP_UINT command,
-	Eip_Item *adressitem,void *adress,
+	Eip_Item *addressitem,void *address,
 	Eip_Item *dataitem,void *data)
 {
 	Encap_Header *request=NULL;
 	int res=0;
 	CIPERROR(0,0,0);
 	LogCip(LogTrace,"->Entering SendData \n");
-	request=_BuildRequest(session,adressitem,adress,dataitem,data,session->timeout);
+	request=_BuildRequest(session,addressitem,address,dataitem,data,session->timeout);
 	if (request==NULL) {
 		CIPERROR(Sys_Error,errno,0);
 		LogCip(LogTrace,"!Exiting SendData with error : %s\n",_cip_err_msg);
@@ -415,40 +415,40 @@ Encap_Header *_SendData_WaitReply(Eip_Session *session,CIP_UINT command,
 }
 
 Encap_Header *_SendRRData(Eip_Session *session,
-	Eip_Item *adressitem,void *adressdata,
+	Eip_Item *addressitem,void *addressdata,
 	Eip_Item *dataitem,void *data)
 {
-	return(_SendData_WaitReply(session,EIP_SENDRRDATA,adressitem,adressdata,dataitem,data));
+	return(_SendData_WaitReply(session,EIP_SENDRRDATA,addressitem,addressdata,dataitem,data));
 }
 
 Encap_Header *_SendUnitData(Eip_Session *session,
-	Eip_Item *adressitem,void *adressdata,
+	Eip_Item *addressitem,void *addressdata,
 	Eip_Item *dataitem,void *data)
 {
-	return(_SendData_WaitReply(session,EIP_SENDUNITDATA,adressitem,adressdata,dataitem,data));
+	return(_SendData_WaitReply(session,EIP_SENDUNITDATA,addressitem,addressdata,dataitem,data));
 }
 
 Eip_CDI *_ConnectedSend( Eip_Session *session,Eip_Connection *connection,
 	void *request,int size)
 {
-	Eip_CAI adressitem;
+	Eip_CAI addressitem;
 	Eip_CDI dataitem;
 	Eip_CDI *result=NULL;
 	Encap_Header *reply=NULL;
 
 	LogCip(LogTrace,"->Entering ConnectedSend \n");
 
-	/* adressitem */
-	adressitem.Type_Id=ItemId_ConnectionBased;
-	adressitem.Length=0;
-	adressitem.CID=connection->OT_ConnID;
+	/* addressitem */
+	addressitem.Type_Id=ItemId_ConnectionBased;
+	addressitem.Length=0;
+	addressitem.CID=connection->OT_ConnID;
 
 	/* dataitem */
 	dataitem.Type_Id=ItemId_ConnectedTP;
 	dataitem.Packet=++(connection->packet);
 	dataitem.Length=size;
 
-	reply=_SendData_WaitReply(session,EIP_SENDUNITDATA,(Eip_Item *)&adressitem,NULL,(Eip_Item *)&dataitem,request);
+	reply=_SendData_WaitReply(session,EIP_SENDUNITDATA,(Eip_Item *)&addressitem,NULL,(Eip_Item *)&dataitem,request);
 	if (reply!=NULL) {
 		Eip_CDI *respdataitem =(Eip_CDI *)_GetDataItem(reply);
 		if (respdataitem==NULL) {

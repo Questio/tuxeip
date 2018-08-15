@@ -34,7 +34,7 @@
 #define ItemId_ListServiceResponse 	     0x0100
 #define ItemId_OTSocketInfo              0x8000  /* originator to target socket info */
 #define ItemId_TOSocketInfo              0x8001  /* target to originator socket info */
-#define ItemId_Sequenced                 0x8002  /* sequenced adress item */
+#define ItemId_Sequenced                 0x8002  /* sequenced address item */
 
 /**************************** Cip Path *************************************/
 

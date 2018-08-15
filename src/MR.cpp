@@ -92,19 +92,19 @@ MR_Request *_BuildMRRequest(CIP_USINT service,BYTE *path,CIP_USINT requestpathsi
 }
 MR_Reply *_ExSendMRRequest(Eip_Session *session,MR_Request *request,int size,int *replysize)
 {
-	Eip_Item adressitem;
+	Eip_Item addressitem;
 	Eip_Item dataitem;
 	Encap_Header *reply=NULL;
 	MR_Reply *mrrep=NULL;
 
-	// adressitem
-	adressitem.Type_Id=ItemId_Null;
-	adressitem.Length=0;
+	// addressitem
+	addressitem.Type_Id=ItemId_Null;
+	addressitem.Length=0;
 	// dataitem
 	dataitem.Type_Id=ItemId_UCM;
 	dataitem.Length=size;
 
-	reply=_SendRRData(session,&adressitem,NULL,&dataitem,request);
+	reply=_SendRRData(session,&addressitem,NULL,&dataitem,request);
 
 	if (reply==NULL) return(NULL); // no response
 	mrrep=_GetMRReply(reply);

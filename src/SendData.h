@@ -25,7 +25,7 @@
 #include "Ethernet_IP.h"
 
 void _CipFlushBuffer(void *buffer,int size);
-int _CipOpenSock(char *serveur,int port);
+int _CipOpenSock(const char *server,int port);
 
 /********** Time-out unit is msec !!! ********************/
 

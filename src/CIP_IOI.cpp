@@ -33,9 +33,9 @@ BYTE DHPB_PROXY_PATH[6] = {0x20,OBJECT_DHP,0x24,0x02,0x2C,0x01};
 
 int _AddSegmentValue(BYTE *IOI,int value);
 
-int _BuildIOI(BYTE *IOI,char *address)
+int _BuildIOI(BYTE *IOI, const char *address)
 {
-	char *b,*e,*p=address,*l=address+strlen(address);
+	char *b,*e,*p=(char *)address,*l=(char *)address+strlen(address);
 	int ioilength=0;
 	while (p<l) {
 		b=strchr(p,'[');
@@ -108,9 +108,9 @@ int _AddSegmentValue(BYTE *IOI,int value)
 	}
 }
 
-int _BuildIOIArray(BYTE *IOI,char *address,int size)
+int _BuildIOIArray(BYTE *IOI,const char *address,int size)
 {
-	char *b,*p=address,*l=address+(strlen(address)<size ? strlen(address):size);
+	char *b,*p=(char *)address,*l=(char *)address+(strlen(address)<size ? strlen(address):size);
 	int ioilength=0;
 	int value=0;
 
@@ -127,7 +127,7 @@ int _BuildIOIArray(BYTE *IOI,char *address,int size)
 	return(ioilength);
 }
 
-int _BuildIOIString(BYTE *IOI,char *address,int size)
+int _BuildIOIString(BYTE *IOI,const char *address,int size)
 {
 	int pathlen=0;
 	int addresslen=(strlen(address)<size? strlen(address):size);

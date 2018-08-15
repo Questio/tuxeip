@@ -149,8 +149,8 @@ typedef struct _Cip_SymbolicSegmentR {
 } PACKED Cip_SymbolicSegmentR;
 typedef Cip_SymbolicSegmentR *PCip_SymbolicSegmentR;
 
-int _BuildIOIString(BYTE *IOI,char *adress,int size);
-int _BuildIOIArray(BYTE *IOI,char *adress,int size);
-int _BuildIOI(BYTE *IOI,char *adress);
+int _BuildIOIString(BYTE *IOI,const char *address,int size);
+int _BuildIOIArray(BYTE *IOI,const char *address,int size);
+int _BuildIOI(BYTE *IOI,const char *address);
 
 #endif /* _CIP_IOI_H */

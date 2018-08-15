@@ -57,9 +57,9 @@ typedef struct _PCCC_Header{
 
 typedef struct _DHP_Header{
 		CIP_UINT Dest_link;
-		CIP_UINT Dest_adress;
+		CIP_UINT Dest_address;
 		CIP_UINT Src_link;
-		CIP_UINT Src_adress;
+		CIP_UINT Src_address;
 		//BYTE data; // the PCCC request
 		}PACKED DHP_Header;
 
@@ -88,7 +88,7 @@ typedef struct _PCCC_SLCRW_Request{
 		BYTE FNC;
 		CIP_UINT Offset;
 		CIP_UINT Trans;
-		// adress
+		// address
 		// BYTE Size;
 		}PACKED PCCC_SLCRW_Request;
 

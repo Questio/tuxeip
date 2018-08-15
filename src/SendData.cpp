@@ -40,7 +40,7 @@ Encap_Header *(*CipSendData_WaitReply)(int sock,Encap_Header *header,int sendtim
 int _CIPEmptyBuffer(int sock);
 char _CIPEmptyBuff[512];
 
-int _CipOpenSock(char *serveur,int port)
+int _CipOpenSock(const char *server,int port)
 {
 	int s, r, i, portnum;
 	struct sockaddr_in sonadr ;
@@ -50,7 +50,7 @@ int _CipOpenSock(char *serveur,int port)
 	memset( (void *)&sonadr,0, sizeof sonadr );
 	sonadr.sin_family = AF_INET ;
 	sonadr.sin_port = htons(portnum) ;
-	sonadr.sin_addr.s_addr = inet_addr(serveur);
+	sonadr.sin_addr.s_addr = inet_addr(server);
 
 	s = socket( PF_INET, SOCK_STREAM, 0 );//|SO_KEEPALIVE
 	if (s<0) return(-1);
@@ -64,7 +64,7 @@ int _CipOpenSock(char *serveur,int port)
 	{	/* If the server is designated by name, you must
 		 * run a dns query */
 		struct hostent *hp;
-		hp = gethostbyname(serveur);
+		hp = gethostbyname(server);
 		if (hp==NULL) return(E_ConnectionFailed);
 		for( i=0, r=-1; (r==-1) && (hp->h_addr_list[i] != NULL); i++)
 		{	memmove((char *)&(sonadr.sin_addr),(char *) hp->h_addr_list[i], sizeof(sonadr.sin_addr));
